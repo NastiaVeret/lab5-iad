@@ -14,7 +14,7 @@ class SchellingAgent(mesa.Agent):
             model: The model the agent belongs to.
             agent_type: Indicator for the agent's type (minority=1, majority=0).
         """
-        super().__init__(unique_id, model)  # Pass unique_id and model
+        super().__init__(unique_id, model) 
         self.type = agent_type
 
     def step(self):
@@ -37,7 +37,9 @@ class Schelling(mesa.Model):
     Model class for the Schelling segregation model.
     """
 
-    def __init__(self, height=20, width=20, homophily=3, radius=1, density=0.8, minority_pc=0.3, seed=None):
+    def __init__(self, height=20, width=20, homophily=3, radius=1, 
+                interaction_threshold=0.5, max_moves=5, agent_color_type=True,
+                 density=0.8, minority_pc=0.3, seed=None):
         """
         Create a new Schelling model.
 
@@ -56,22 +58,24 @@ class Schelling(mesa.Model):
         self.minority_pc = minority_pc
         self.homophily = homophily
         self.radius = radius
+        self.interaction_threshold = interaction_threshold  # Додано новий параметр
+        self.max_moves = max_moves  # Додано новий параметр
+        self.agent_color_type = agent_color_type  # Додано новий параметр
 
         self.grid = mesa.space.SingleGrid(width, height, torus=True)
 
         self.happy = 0
         self.datacollector = mesa.DataCollector(
-            model_reporters={"happy": "happy"},  # Model-level count of happy agents
+            model_reporters={"happy": "happy"},  
         )
 
-        # Set up agents
-        unique_id = 0  # Initialize a unique ID counter
+        unique_id = 0 
         for _, pos in self.grid.coord_iter():
             if self.random.random() < self.density:
                 agent_type = 1 if self.random.random() < self.minority_pc else 0
-                agent = SchellingAgent(unique_id, self, agent_type)  # Pass unique_id
+                agent = SchellingAgent(unique_id, self, agent_type)  
                 self.grid.place_agent(agent, pos)
-                unique_id += 1  # Increment unique ID counter
+                unique_id += 1  
 
         self.datacollector.collect(self)
 
@@ -79,7 +83,7 @@ class Schelling(mesa.Model):
         """
         Run one step of the model.
         """
-        self.happy = 0  # Reset counter of happy agents
+        self.happy = 0  
         self.agents.shuffle_do("step")
 
         self.datacollector.collect(self)
