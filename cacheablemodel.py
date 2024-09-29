@@ -23,6 +23,7 @@ class CacheableSchelling(CacheableModel):
         minority_pc=0.2,
         homophily=3,
         radius=1,
+        interaction_threshold=0.5, max_moves=5, agent_color_type=True,
         cache_file_path="./my_cache_file_path.cache",
         # Note that this is an additional parameter we add to our model,
         # which decides whether to simulate or replay
@@ -35,6 +36,9 @@ class CacheableSchelling(CacheableModel):
             minority_pc=minority_pc,
             homophily=homophily,
             radius=radius,
+            interaction_threshold = interaction_threshold,
+            max_moves = max_moves,
+            agent_color_type = agent_color_type
         )
         cache_state = CacheState.REPLAY if replay else CacheState.RECORD
         super().__init__(
